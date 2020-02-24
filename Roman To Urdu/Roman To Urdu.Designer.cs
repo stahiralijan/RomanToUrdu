@@ -35,7 +35,8 @@
             this.labelUrdu = new System.Windows.Forms.Label();
             this.buttonConvert = new System.Windows.Forms.Button();
             this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemAdd = new System.Windows.Forms.ToolStripMenuItem();
+            this.buttonCopyUrduText = new System.Windows.Forms.Button();
             this.contextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -55,11 +56,11 @@
             // 
             this.textBoxUrdu.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxUrdu.Location = new System.Drawing.Point(15, 300);
+            this.textBoxUrdu.Location = new System.Drawing.Point(12, 300);
             this.textBoxUrdu.Multiline = true;
             this.textBoxUrdu.Name = "textBoxUrdu";
             this.textBoxUrdu.ShortcutsEnabled = false;
-            this.textBoxUrdu.Size = new System.Drawing.Size(820, 131);
+            this.textBoxUrdu.Size = new System.Drawing.Size(823, 131);
             this.textBoxUrdu.TabIndex = 1;
             this.textBoxUrdu.MouseDown += new System.Windows.Forms.MouseEventHandler(this.textBoxUrdu_MouseDown);
             // 
@@ -97,22 +98,34 @@
             // 
             this.contextMenuStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem1});
+            this.toolStripMenuItemAdd});
             this.contextMenuStrip.Name = "contextMenuStrip";
             this.contextMenuStrip.ShowImageMargin = false;
-            this.contextMenuStrip.Size = new System.Drawing.Size(206, 56);
+            this.contextMenuStrip.Size = new System.Drawing.Size(206, 28);
             // 
-            // toolStripMenuItem1
+            // toolStripMenuItemAdd
             // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(205, 24);
-            this.toolStripMenuItem1.Text = "Add Urdu for this word";
+            this.toolStripMenuItemAdd.Name = "toolStripMenuItemAdd";
+            this.toolStripMenuItemAdd.Size = new System.Drawing.Size(205, 24);
+            this.toolStripMenuItemAdd.Text = "Add Urdu for this word";
+            this.toolStripMenuItemAdd.Click += new System.EventHandler(this.toolStripMenuItemAdd_Click);
+            // 
+            // buttonCopyUrduText
+            // 
+            this.buttonCopyUrduText.Location = new System.Drawing.Point(12, 437);
+            this.buttonCopyUrduText.Name = "buttonCopyUrduText";
+            this.buttonCopyUrduText.Size = new System.Drawing.Size(183, 34);
+            this.buttonCopyUrduText.TabIndex = 5;
+            this.buttonCopyUrduText.Text = "Copy Converted Text";
+            this.buttonCopyUrduText.UseVisualStyleBackColor = true;
+            this.buttonCopyUrduText.Click += new System.EventHandler(this.buttonCopyUrduText_Click);
             // 
             // RomanToUrdu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(847, 483);
+            this.Controls.Add(this.buttonCopyUrduText);
             this.Controls.Add(this.buttonConvert);
             this.Controls.Add(this.labelUrdu);
             this.Controls.Add(this.labelRoman);
@@ -138,7 +151,8 @@
         private System.Windows.Forms.Label labelUrdu;
         private System.Windows.Forms.Button buttonConvert;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAdd;
+        private System.Windows.Forms.Button buttonCopyUrduText;
     }
 }
 

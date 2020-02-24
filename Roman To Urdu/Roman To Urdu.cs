@@ -1,7 +1,9 @@
 ﻿using CsvHelper;
+using LiteDB;
 using Roman_To_Urdu.Entities;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
 using System.Globalization;
@@ -13,40 +15,61 @@ namespace Roman_To_Urdu
 {
     public partial class RomanToUrdu : Form
     {
-        IEnumerable<Word> dictionary;
-        StreamReader reader;
-        CsvReader csv;
+        Add_Word addWordForm;
+
+        private string ApplicationExecutablePath;
+        private string DbDirectory;
+        private string DbFilename;
+
+        private LiteDatabase db;
 
         public RomanToUrdu()
         {
             InitializeComponent();
+
+            addWordForm = new Add_Word();
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            var path = AppDomain.CurrentDomain.BaseDirectory;
-            reader = new StreamReader(Path.Combine(path, "Dictionary", "urdu-dataset.csv"));
-            csv = new CsvReader(reader, CultureInfo.CurrentCulture);
+            ApplicationExecutablePath = AppDomain.CurrentDomain.BaseDirectory;
 
-            csv.Configuration.HasHeaderRecord = false;
-            csv.Configuration.RegisterClassMap<WordMap>();
-            dictionary = csv.GetRecords<Word>();
+            DbDirectory = ConfigurationManager.AppSettings["DatabaseDirectory"];
+            DbFilename = ConfigurationManager.AppSettings["DatabaseName"];
+
+            db = new LiteDatabase(Path.Combine(ApplicationExecutablePath, DbDirectory, DbFilename));
         }
 
         private void buttonConvert_Click(object sender, EventArgs e)
         {
             var text = Sanitize(textBoxRoman.Text);
             var words = text.Split(' ');
+            
+            textBoxUrdu.Text = GetTransliteration(words);
+        }
+
+        private string GetTransliteration(string[] words)
+        {
             string urdu = "";
-
-            foreach (string word in words)
+            try
             {
-                var w = dictionary.Where(x => x.Roman.ToLowerInvariant() == word.Trim().ToLowerInvariant())
-                    .FirstOrDefault();
+                var wordDb = db.GetCollection<Word>("words");
+                foreach (string word in words)
+                {
+                    var w = wordDb
+                        .Query()
+                        .Where(x => x.Roman.Contains(word.Trim().ToLower()))
+                        //.Select(x => new Word { Roman = x.Roman, Urdu = x.Urdu, Id = x.Id})
+                        .FirstOrDefault();
 
-                urdu += (w == null ? word : w.Urdu) + " ";
+                    urdu += (w == null ? word : w.Urdu) + " ";
+                }
             }
-            textBoxUrdu.Text = urdu;
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            return urdu;
         }
         
         private string Sanitize(string text)
@@ -71,9 +94,30 @@ namespace Roman_To_Urdu
 
         private void RomanToUrdu_FormClosing(object sender, FormClosingEventArgs e)
         {
-            csv.Dispose();
-            reader.Close();
-            reader.Dispose();
+            
+        }
+
+        private void toolStripMenuItemAdd_Click(object sender, EventArgs e)
+        {
+            addWordForm.WordToAdd = textBoxUrdu.SelectedText.Trim();
+            addWordForm.Db = db;
+            addWordForm.VisibleChanged += (obj, evt) =>
+            {
+                if(!addWordForm.Visible)
+                {
+                    buttonConvert.PerformClick();
+                }
+            };
+
+            addWordForm.ShowDialog();
+        }
+
+        private void buttonCopyUrduText_Click(object sender, EventArgs e)
+        {
+            if(textBoxUrdu.TextLength > 0)
+            {
+                Clipboard.SetText(textBoxUrdu.Text);
+            }
         }
     }
 }
