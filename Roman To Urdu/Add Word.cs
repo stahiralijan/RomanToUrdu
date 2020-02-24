@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace Roman_To_Urdu
 {
-    public partial class Form1 : Form
+    public partial class Add_Word : Form
     {
-        public Form1()
+        public Add_Word()
         {
             InitializeComponent();
         }
